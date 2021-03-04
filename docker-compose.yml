@@ -1,0 +1,65 @@
+version: '3.8'
+services:
+  nginx:
+    build:
+      context: ./docker
+      dockerfile: nginx.docker
+    volumes:
+      - ./:/var/www
+    ports:
+      - "8080:80"
+    depends_on:
+      - php-fpm
+  php-fpm:
+    build:
+      context: ./docker
+      dockerfile: php-fpm.docker
+    volumes:
+      - ./:/var/www
+      - ./docker/php/ini/conf.d/memory_limit.ini:/usr/local/etc/php/conf.d/memory_limit.ini
+    depends_on:
+      mysql:
+        condition: service_healthy
+  php-cli:
+    build:
+      context: ./docker
+      dockerfile: php-cli.docker
+    volumes:
+      - ./:/var/www
+      - ./docker/php/ini/conf.d/memory_limit.ini:/usr/local/etc/php/conf.d/memory_limit.ini
+    depends_on:
+      mysql:
+        condition: service_healthy
+  mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret
+      - MYSQL_USER=app
+      - MYSQL_PASSWORD=secret
+      - MYSQL_DATABASE=app
+    ports:
+      - "33061:3306"
+    volumes:
+      - db:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      timeout: 10s
+      retries: 20
+  node:
+    build:
+      context: ./docker
+      dockerfile: node.docker
+    volumes:
+      - ./:/var/www
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+  mailer:
+    image: mailhog/mailhog
+    restart: unless-stopped
+    ports:
+      - "1025:1025"
+      - "8082:8025"
+
+volumes:
+  db:
