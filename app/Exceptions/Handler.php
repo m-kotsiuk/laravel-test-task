@@ -38,4 +38,13 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    public function render($request, Throwable $e)
+    {
+        if ($this->isHttpException($e) && 404 == intval($e->getStatusCode())) {
+            return redirect()->route('employees.index');
+        }
+
+        return parent::render($request, $e);
+    }
 }

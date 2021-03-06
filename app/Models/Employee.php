@@ -9,7 +9,7 @@ use Kalnoy\Nestedset\NodeTrait;
 
 class Employee extends Model
 {
-    use HasFactory, NodeTrait, HasAuthor;
+    use HasFactory, HasAuthor, NodeTrait;
 
     protected $fillable = [
         'name',
@@ -18,10 +18,17 @@ class Employee extends Model
         'phone_number',
         'email',
         'salary',
-        'photo'
+        'photo',
+        'node_depth',
+        'parent_id'
     ];
 
     protected $casts = [
         'employment_date' => 'date'
     ];
+
+    public function position()
+    {
+        return $this->belongsTo(Position::class);
+    }
 }

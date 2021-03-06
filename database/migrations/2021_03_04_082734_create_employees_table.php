@@ -18,14 +18,13 @@ class CreateEmployeesTable extends Migration
             $table->string('name');
             $table
                 ->foreignId('position_id')
-                ->nullable()
                 ->constrained('positions')
-                ->onDelete('set null');
+                ->onDelete('RESTRICT');
             $table->date('employment_date');
             $table->string('phone_number')->unique();
             $table->string('email')->unique();
-            $table->float('salary');
-            $table->string('photo');
+            $table->float('salary', 8, 2);
+            $table->string('photo')->nullable();
             $table->nestedSet();
             $table->userstamps();
             $table->timestamps();

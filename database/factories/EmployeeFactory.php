@@ -32,7 +32,7 @@ class EmployeeFactory extends Factory
             'employment_date' => $this->faker->dateTimeBetween( '-5 years') ,
             'phone_number' => $this->faker->unique()->numerify($phoneFormat),
             'email' => $this->faker->unique()->email,
-            'salary' => $this->faker->randomFloat(2,0, 50000),
+            'salary' => $this->faker->randomFloat(2,0, 500000),
             'photo' => $this->faker->imageUrl(300, 300)
         ];
     }

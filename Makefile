@@ -1,4 +1,4 @@
-init: clear build up load-db
+init: clear build up reset-db
 
 up:
 	docker-compose up -d
@@ -15,8 +15,14 @@ build:
 	docker-compose pull
 	docker-compose build
 
-load-db:
+seed-db:
 	docker-compose run --rm php-cli php artisan migrate:refresh --seed
+
+dump-db:
+	docker-compose exec -T mysql /usr/bin/mysqldump --no-tablespaces -u app -psecret app > app.sql
+
+reset-db:
+	cat app.sql | docker-compose exec -T mysql /usr/bin/mysql -u app -psecret app
 
 cli:
 	read COMMAND; \
@@ -25,6 +31,3 @@ cli:
 node:
 	read COMMAND; \
 	docker-compose run --rm node $$COMMAND
-
-test:
-	docker-compose run --rm php-cli php vendor/bin/phpunit

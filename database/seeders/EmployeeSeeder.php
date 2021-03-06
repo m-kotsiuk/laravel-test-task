@@ -9,13 +9,12 @@ class EmployeeSeeder extends Seeder
 {
     protected function generate(int $iteration = 0)
     {
-        //9
         $employees = Employee::factory()
-            ->times(9)
+            ->times(6)
             ->create();
 
 
-        if (4 > $iteration)  {
+        if (5 > $iteration)  {
             $employees->each(function (Employee $employee) use ($iteration) {
                 $employee
                     ->children()
