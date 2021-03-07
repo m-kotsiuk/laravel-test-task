@@ -1,4 +1,13 @@
+install: build up prepare-env reset-db
+
 init: clear build up reset-db
+
+prepare-env:
+	cp .env.example .env
+	docker-compose run --rm php-cli composer install
+	docker-compose run --rm php-cli php artisan key:generate
+	docker-compose run --rm php-cli php artisan storage:link
+
 
 up:
 	docker-compose up -d
